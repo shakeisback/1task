@@ -2,12 +2,12 @@
 {% extends "layouts/master.njk" %}
 
 {% block content %}
-	<div id="app">
-		<input v-model="inputValue" type="text">
-		{{inputValue}} {# <-- i can use the brackets now #}
-
-		<ul>
-			<list-item v-bind:value="inputValue"></list-item>
-		</ul>
-	</div>
+	<div id="watch-example">
+  <p>
+    Задайте вопрос, на который можно ответить «да» или «нет»:
+    <input v-model="question">
+  </p>
+  <p>{{answer}}</p>
+  <div class="answerImg" v-bind:style="{ 'background-image': 'url(' + img + ')'}"></div>
+</div>
 {% endblock %}

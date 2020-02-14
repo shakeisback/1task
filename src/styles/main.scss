@@ -6,13 +6,9 @@
 @import 'base/general';
 @import '../blocks/components/components';
 @import '../blocks/modules/modules';
-
-main {
-  // display: flex;
-  // justify-content: space-around;
-}
-
-.shop-list {
-  background-color: rgb(228, 228, 228);
-  padding: 40px;
+.answerImg {
+    background-size: cover;
+    width: 70vw;
+    height: 70vw;
+    border: 3px solid black;
 }
