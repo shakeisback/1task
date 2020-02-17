@@ -5,51 +5,73 @@ import _ from 'lodash';
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    var watchExampleVM = new Vue({
-        el: '#watch-example',
-        data: {
-            question: '',
-            answer: 'Пока вы не зададите вопрос, я не могу ответить!',
-            img: "",
-        },
-        watch: {
-            // эта функция запускается при любом изменении вопроса
-            question: function(newQuestion, oldQuestion) {
-                this.answer = 'Ожидаю, когда вы закончите печатать...'
-                this.debouncedGetAnswer()
+    Vue.component('parallax-list', {
+        data() {
+            return {
+                paralaxData: [{
+                        background: 'https://images.unsplash.com/photo-1551582045-6ec9c11d8697?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
+                        title: 'Winter',
+                    },
+                    {
+                        background: 'https://images.unsplash.com/photo-1522748906645-95d8adfd52c7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
+                        title: 'Spring',
+                    },
+                    {
+                        background: 'https://images.unsplash.com/photo-1553649084-3e42773ff0e3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
+                        title: 'Summer',
+                    },
+                    {
+                        background: 'https://images.unsplash.com/photo-1429198739803-7db875882052?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60',
+                        title: 'Autumn',
+                    }
+
+                ]
             }
         },
-        created: function() {
-            // _.debounce — это функция lodash, позволяющая ограничить то,
-            // насколько часто может выполняться определённая операция.
-            // В данном случае мы ограничиваем частоту обращений к yesno.wtf/api,
-            // дожидаясь завершения печати вопроса перед отправкой ajax-запроса.
-            // Узнать больше о функции _.debounce (и её родственнице _.throttle),
-            // можно в документации: https://lodash.com/docs#debounce
-            this.debouncedGetAnswer = _.debounce(this.getAnswer, 500)
+        template: `
+            <ul class="parallax__list">
+              <paralax-item :article="item" v-for="item in paralaxData"></paralax-item>
+            </ul>
+        `,
+
+    });
+
+
+
+
+
+
+
+
+    Vue.component('paralax-item', {
+        props: ['article'],
+        template: `
+            <li class="paralax__item" ref="item">
+                <div class="paralax__bg" ref="bg" v-bind:style="{ 'background-image': 'url(' + article.background + ')' }"></div>
+                <h1 class="paralax__title">{{ article.title }}</h1>
+            </li>
+        
+        `,
+        created() {
+            window.addEventListener('scroll', this.handleScroll);
         },
         methods: {
-            getAnswer: function() {
-                if (this.question.indexOf('?') === -1) {
-                    this.answer = 'Вопросы обычно заканчиваются вопросительным знаком. ;-)'
-                    return
+            handleScroll() {
+                const parentHeight = this.$refs.item.offsetHeight
+                const parallaxHeight = this.$refs.bg.offsetHeight
+                const availableOffset = parallaxHeight - parentHeight
+                let animationValue = (window.pageYOffset * 0.20)
+                if (animationValue <= availableOffset && animationValue >= 0) {
+                    this.$refs.bg.style.transform = `translate3d(0, ${animationValue}px , 0)
+                    `
                 }
-                this.answer = 'Думаю...'
-                var vm = this
-                axios.get('https://yesno.wtf/api')
-                    .then(function(response) {
-
-
-                        vm.answer = _.capitalize(response.data.answer);
-                        vm.img = _.capitalize(response.data.image);
-                    })
-                    .catch(function(error) {
-                        vm.answer = 'Ошибка! Не могу связаться с API. ' + error
-                    })
             }
-        }
-    })
+        },
 
+    })
+    const vue = new Vue({
+        el: '#app',
+    });
 
     window.VUE = vue;
 });

@@ -2,12 +2,7 @@
 {% extends "layouts/master.njk" %}
 
 {% block content %}
-	<div id="watch-example">
-  <p>
-    Задайте вопрос, на который можно ответить «да» или «нет»:
-    <input v-model="question">
-  </p>
-  <p>{{answer}}</p>
-  <div class="answerImg" v-bind:style="{ 'background-image': 'url(' + img + ')'}"></div>
-</div>
+  <div id="app">
+    <parallax-list></parallax-list>
+  </div>
 {% endblock %}
